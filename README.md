@@ -34,3 +34,12 @@ Logout
 logout
 ```
 
+Create Group
+```sh
+create_group [groupname]
+```
+
+Join Group
+```sh
+join_group [groupname]
+```
