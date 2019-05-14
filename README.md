@@ -43,3 +43,8 @@ Join Group
 ```sh
 join_group [groupname]
 ```
+
+Send Group Message
+```sh
+sendto_group [groupname] [message]
+```

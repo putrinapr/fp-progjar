@@ -37,6 +37,12 @@ class ChatClient:
             elif (command=='join_group'):
                 groupname = j[1]
                 return self.join_group(groupname)
+            elif (command=='sendto_group'):
+                togroupname = j[1]
+                groupmessage=""
+                for w in j[2:]:
+                   groupmessage="{} {}" . format(groupmessage,w)
+                return self.sendto_group(togroupname, groupmessage)
 	    else:
 		return "*Maaf, command tidak benar"
 	except IndexError:
@@ -115,6 +121,16 @@ class ChatClient:
         else:
             return "Error, {}" . format(json.dumps(result['message']))
 
+    def sendto_group(self, togroupname, groupmessage):
+        if (self.tokenid==""):
+            return "you're not login"
+        string = "sendto_group {} {} {}\r\n" . format(self.tokenid, togroupname, groupmessage)
+        result = self.sendstring(string)
+
+        if result['status']=='OK':
+            return "{}" . format(result['message'])
+        else:
+            return "Error, {}" . format(json.dumps(result['message']))
 
 
 if __name__=="__main__":
