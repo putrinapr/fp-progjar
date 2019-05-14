@@ -12,16 +12,17 @@ class ChatClient:
         self.server_address = (TARGET_IP,TARGET_PORT)
         self.sock.connect(self.server_address)
         self.tokenid=""
+        self.username=""
     def proses(self,cmdline):
-	j=cmdline.split(" ")
+	j=cmdline.strip().split(" ")
 	try:
-	    command=j[0].strip()
+	    command=j[0]
 	    if (command=='auth'):
-		username=j[1].strip()
-		password=j[2].strip()
+		username=j[1]
+		password=j[2]
 		return self.login(username,password)
 	    elif (command=='send'):
-		usernameto = j[1].strip()
+		usernameto = j[1]
                 message=""
                 for w in j[2:]:
                    message="{} {}" . format(message,w)
@@ -30,6 +31,12 @@ class ChatClient:
                 return self.inbox()
             elif (command=='logout'):
                 return self.logout()
+            elif (command=='create_group'):
+                groupname = j[1]
+                return self.create_group(groupname)
+            elif (command=='join_group'):
+                groupname = j[1]
+                return self.join_group(groupname)
 	    else:
 		return "*Maaf, command tidak benar"
 	except IndexError:
@@ -51,6 +58,7 @@ class ChatClient:
         result = self.sendstring(string)
         if result['status']=='OK':
             self.tokenid=result['tokenid']
+            self.username = username
             return "username {} logged in, token {} " .format(username,self.tokenid)
         else:
             return "Error, {}" . format(result['message'])
@@ -80,14 +88,38 @@ class ChatClient:
         result = self.sendstring(string)
         if result['status']=='OK':
             self.tokenid=""
+            self.username=""
             return "logout success"
         else:
             return "Error, {}" . format(result['message'])
+
+    def create_group(self, groupname):
+        if (self.tokenid==""):
+            return "you're not login"
+        string = "create_group {} {} \r\n" . format(self.tokenid, groupname)
+        result = self.sendstring(string)
+
+        if result['status']=='OK':
+            return "{}" . format(result['message'])
+        else:
+            return "Error, {}" . format(json.dumps(result['message']))
+
+    def join_group(self, groupname):
+        if (self.tokenid==""):
+            return "you're not login"
+        string = "join_group {} {}\r\n" . format(self.tokenid, groupname)
+        result = self.sendstring(string)
+
+        if result['status']=='OK':
+            return "{}" . format(result['message'])
+        else:
+            return "Error, {}" . format(json.dumps(result['message']))
+
 
 
 if __name__=="__main__":
     cc = ChatClient()
     while True:
-        cmdline = raw_input("Command {}:" . format(cc.tokenid))
+        cmdline = raw_input("Command {}:" . format(cc.username))
         print cc.proses(cmdline)
 
