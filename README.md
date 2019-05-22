@@ -51,10 +51,10 @@ sendto_group [groupname] [message]
 
 Send Image
 ```sh
-sendto_group [username] [filename]
+sendimg [username] [filename]
 ```
 
 Send Image to Group Message
 ```sh
-sendto_group [groupname] [filename]
+sendimgto_group [groupname] [filename]
 ```
