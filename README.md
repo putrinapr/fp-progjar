@@ -49,12 +49,7 @@ Send Group Message
 sendto_group [groupname] [message]
 ```
 
-Send Image
+Send File
 ```sh
-sendimg [username] [filename]
-```
-
-Send Image to Group Message
-```sh
-sendimgto_group [groupname] [filename]
+send_file [username] [filename]
 ```
