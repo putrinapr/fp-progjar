@@ -48,3 +48,13 @@ Send Group Message
 ```sh
 sendto_group [groupname] [message]
 ```
+
+Send Image
+```sh
+sendto_group [username] [filename]
+```
+
+Send Image to Group Message
+```sh
+sendto_group [groupname] [filename]
+```
