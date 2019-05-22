@@ -4,7 +4,7 @@ import json
 import datetime
 
 TARGET_IP = "127.0.0.1"
-TARGET_PORT = 8889
+TARGET_PORT = 8883
 
 
 class ChatClient:
@@ -30,6 +30,13 @@ class ChatClient:
 		return self.sendmessage(usernameto,message)
             elif (command=='inbox'):
                 return self.inbox()
+            elif (command == 'send_file'):
+                usernameto = j[1]
+                filename = j[2]
+                return self.send_file(usernameto, filename)
+            elif (command == 'download_file'):
+                filename = j[1]
+                return self.download_file(filename)
             elif (command=='logout'):
                 return self.logout()
             elif (command=='create_group'):
@@ -44,14 +51,6 @@ class ChatClient:
                 for w in j[2:]:
                    groupmessage="{} {}" . format(groupmessage,w)
                 return self.sendto_group(togroupname, groupmessage)
-            elif (command == 'send_file'):
-                usernameto = j[1]
-                filename = j[2]
-                return self.send_file(usernameto, filename)
-
-            elif (command == 'download_file'):
-                filename = j[1]
-                return self.download_file(filename)
 	    else:
 		return "*Maaf, command tidak benar"
 	except IndexError:
@@ -86,7 +85,15 @@ class ChatClient:
             return "message sent to {}" . format(usernameto)
         else:
             return "Error, {}" . format(result['message'])
-
+    def inbox(self):
+        if (self.tokenid==""):
+            return "Error, not authorized"
+        string="inbox {} \r\n" . format(self.tokenid)
+        result = self.sendstring(string)
+        if result['status']=='OK':
+            return "{}" . format(json.dumps(result['messages']))
+        else:
+            return "Error, {}" . format(result['message'])
     def send_file(self, usernameto, filename):
         if (self.tokenid==""):
             return "Error, not authorized"
@@ -138,15 +145,6 @@ class ChatClient:
         else:
             return "Error, file not found"
 
-    def inbox(self):
-        if (self.tokenid==""):
-            return "Error, not authorized"
-        string="inbox {} \r\n" . format(self.tokenid)
-        result = self.sendstring(string)
-        if result['status']=='OK':
-            return "{}" . format(json.dumps(result['messages']))
-        else:
-            return "Error, {}" . format(result['message'])
 
     def logout(self):
         if (self.tokenid==""):
@@ -199,3 +197,4 @@ if __name__=="__main__":
     while True:
         cmdline = raw_input("Command {}:" . format(cc.username))
         print cc.proses(cmdline)
+
