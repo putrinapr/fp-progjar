@@ -53,3 +53,8 @@ Send File
 ```sh
 send_file [username] [filename]
 ```
+
+Download File
+```sh
+download_file [filename]
+```
